@@ -89,23 +89,28 @@ Set to 0 to disable this plugin.
 Default: unset
 Set to 0 to disable this plugin for certain buffer.
 
-3\) `g:apc_min_length`
+3\) `g:apc_enable_auto_pop`
+
+Default: 1
+Set to 0 to disable this plugin's auto popup completion window feture.
+
+4\) `g:apc_min_length`
 
 Default: 2
 Minimal characters to trigger the completion popup menu.
 
-4\) `g:apc_trigger`
+5\) `g:apc_trigger`
 
 Default: `"\<c-n>"`
 Key to trigger the completion popup menu.
 Set to `"\<c-x>\<c-o>"` to trigger omni completion.
 
-5\) `b:apc_trigger`
+6\) `b:apc_trigger`
 
 Default: unset
 Specify trigger key for certain buffer, will override `g:apc_trigger` for certain buffer.
 
-6\) `g:apc_cr_confirm`
+7\) `g:apc_cr_confirm`
 
 Default: 0
 
