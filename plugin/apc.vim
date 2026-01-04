@@ -63,12 +63,28 @@ function! s:on_backspace()
 endfunc
 
 " autocmd for CursorMovedI
+function! s:cursor_moved_i_handler() abort
+    if has("timers")
+        if exists('b:cursor_moved_i_timer') | call timer_stop(b:cursor_moved_i_timer) | endif
+        let b:cursor_moved_i_timer = timer_start(500, { -> s:feed_popup() })
+    else
+        call s:feed_popup()
+    endif
+endfunction
+
 function! s:feed_popup()
     let enable = get(g:, 'apc_enable', 0) && get(b:, 'apc_enable', 0)
     let lastx  = get(b:, 'apc_lastx', -1)
     let lasty  = get(b:, 'apc_lasty', -1)
     let tick   = get(b:, 'apc_tick', -1)
     if &bt != '' || enable == 0 || &paste | return -1 | endif
+
+    if has("timers")
+        if mode() !=# 'i' | return -1 | endif
+        if !exists('b:cursor_moved_i_timer') | return -1 | endif
+        unlet b:cursor_moved_i_timer
+    endif
+
     let x = col('.') - 1
     let y = line('.') - 1
     if pumvisible()
@@ -114,7 +130,7 @@ function! s:apc_enable()
     if g:apc_enable_auto_pop
         augroup ApcEventGroup
             autocmd!
-            autocmd CursorMovedI <buffer> nested call s:feed_popup()
+            autocmd CursorMovedI <buffer> nested call s:cursor_moved_i_handler()
             autocmd CompleteDone <buffer> call s:complete_done()
         augroup END
         let b:apc_init_autocmd = 1
